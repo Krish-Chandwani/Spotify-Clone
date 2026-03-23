@@ -32,4 +32,20 @@ async function createAlbum(req,res){
     res.status(201).json({message:'Album created successfully', album});
 }
 
-module.exports={createMusic, createAlbum};
+async function getAllMusics(req,res){
+    const musics=await musicModel.find();
+    res.status(200).json({musics});
+}
+
+async function getAllAlbums(req,res){
+    const albums=await albumModel.find().select('-music').populate('artist','username');
+    res.status(200).json({albums});
+}
+
+async function getAlbumsById(req,res){
+    const {id}=req.params;
+    const album=await albumModel.findById(id).populate('artist','username').populate('music');
+    res.status(200).json({album});
+}
+
+module.exports={createMusic, createAlbum, getAllMusics, getAllAlbums, getAlbumsById};
